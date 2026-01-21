@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MASTER Interview Guide – Problems 21–25</title>
+<style>
+:root { --bg:#0b0f14; --card:#111826; --text:#e6edf3; --muted:#9fb0c0; --accent:#7aa2f7; --code:#0a0e14; --border:#263244; }
+@media (prefers-color-scheme: light) {
+  :root { --bg:#ffffff; --card:#f7f9fc; --text:#0b1220; --muted:#516070; --accent:#2f6feb; --code:#0b1220; --border:#d6deea; }
+}
+html,body { margin:0; padding:0; background:var(--bg); color:var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+.container { max-width: 980px; margin: 0 auto; padding: 24px 16px 60px; }
+.topbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom: 16px; }
+.brand { font-weight: 800; letter-spacing: .2px; }
+.badge { color: var(--muted); font-size: 13px; }
+.nav a { color: var(--accent); text-decoration: none; font-weight: 600; }
+.nav a:hover { text-decoration: underline; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px 16px; margin: 14px 0; box-shadow: 0 6px 18px rgba(0,0,0,.12); }
+.h1 { font-size: 22px; font-weight: 800; margin: 0 0 8px; }
+.h2 { font-size: 16px; font-weight: 800; margin: 0 0 8px; }
+.meta { color: var(--muted); font-size: 13px; margin-bottom: 10px; }
+ul { margin: 8px 0 12px 20px; }
+pre { background: var(--code); border: 1px solid var(--border); border-radius: 12px; padding: 12px; overflow:auto; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12.5px; }
+.pager { display:flex; gap:12px; justify-content:space-between; margin-top: 18px; }
+.pager a { display:inline-block; padding: 10px 12px; border:1px solid var(--border); border-radius: 12px; color: var(--accent); text-decoration:none; font-weight:700; background: transparent; }
+.pager a:hover { filter: brightness(1.08); }
+.grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 14px; }
+.tile { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+.tile a { color: var(--accent); text-decoration:none; font-weight:800; }
+.small { color: var(--muted); font-size: 13px; margin-top: 6px; }
+hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+pre {
+    background: #f5f5f5;
+    color: #000;
+    padding: 14px;
+    border-radius: 6px;
+    border-left: 4px solid #3f51b5;
+    overflow-x: auto;
+}
+
+code {
+    color: #000;
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+</style>
+
+</head>
+<body>
+<div class="container">
+
+<div class="topbar">
+  <div>
+    <div class="brand">Problems 21–25</div>
+    <div class="badge"><a class="nav" href="index.html" style="color:var(--accent); text-decoration:none;">Index</a> • Jump: <a href="#p21">21</a> • <a href="#p22">22</a> • <a href="#p23">23</a> • <a href="#p24">24</a> • <a href="#p25">25</a></div>
+  </div>
+  <div class="nav">
+    <a href="page-04.html">← Previous</a> &nbsp; <a href="page-06.html">Next →</a>
+  </div>
+</div>
+
+
+<section class="card" id="p21">
+  <div class="h2">21. Intersection of Two Arrays (Unique)</div>
+  <div class="meta">Arrays + HashMap / Two Pointers / Prefix Sum</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Put array A in a HashSet.</li>
+<li>Scan B; if present, add to result set; convert to array.</li></ul>
+  <div><strong>Complexity</strong>: O(n+m) time, O(n) space.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>import java.util.*;
+
+public class IntersectionUnique {
+
+    public static int[] intersection(int[] a, int[] b) {
+        Set&lt;Integer&gt; set = new HashSet&lt;&gt;();
+        for (int x : a) set.add(x);
+
+        Set&lt;Integer&gt; out = new HashSet&lt;&gt;();
+        for (int x : b) if (set.contains(x)) out.add(x);
+
+        int[] res = new int[out.size()];
+        int i = 0;
+        for (int x : out) res[i++] = x;
+
+        return res;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p22">
+  <div class="h2">22. Union of Two Arrays (Unique)</div>
+  <div class="meta">Arrays + HashMap / Two Pointers / Prefix Sum</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Add all elements from both arrays to a HashSet.</li>
+<li>Return set as array/list.</li></ul>
+  <div><strong>Complexity</strong>: O(n+m) time, O(n+m) space.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>import java.util.*;
+
+public class UnionUnique {
+
+    public static int[] union(int[] a, int[] b) {
+        Set&lt;Integer&gt; set = new HashSet&lt;&gt;();
+        for (int x : a) set.add(x);
+        for (int x : b) set.add(x);
+
+        int[] res = new int[set.size()];
+        int i = 0;
+        for (int x : set) res[i++] = x;
+
+        return res;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p23">
+  <div class="h2">23. Majority Element (&gt; n/2)</div>
+  <div class="meta">Arrays + HashMap / Two Pointers / Prefix Sum</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Use Boyer-Moore voting.</li>
+<li>Maintain candidate and count; cancel out different values.</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(1) space.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>public class MajorityElement {
+
+    public static int majorityElement(int[] nums) {
+        int cand = 0, count = 0;
+
+        for (int x : nums) {
+            if (count == 0) {
+                cand = x;
+                count = 1;
+            } else if (x == cand) {
+                count++;
+            } else {
+                count--;
+            }
+        }
+        return cand;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p24">
+  <div class="h2">24. Single Number (every element twice except one)</div>
+  <div class="meta">Arrays + HashMap / Two Pointers / Prefix Sum</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>XOR all numbers; pairs cancel out.</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(1) space.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>public class SingleNumber {
+
+    public static int singleNumber(int[] nums) {
+        int x = 0;
+        for (int v : nums) x ^= v;
+        return x;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p25">
+  <div class="h2">25. Subarray Sum Equals K (count of subarrays)</div>
+  <div class="meta">Arrays + HashMap / Two Pointers / Prefix Sum</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Prefix sum + HashMap of prefixSum -&gt; frequency.</li>
+<li>For each prefix sum ps, add freq(ps-k) to answer; increment freq(ps).</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(n) space.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>import java.util.*;
+
+public class SubarraySumEqualsK {
+
+    public static int subarraySum(int[] nums, int k) {
+        Map&lt;Integer, Integer&gt; freq = new HashMap&lt;&gt;();
+        freq.put(0, 1);
+
+        int ps = 0, ans = 0;
+
+        for (int x : nums) {
+            ps += x;
+            ans += freq.getOrDefault(ps - k, 0);
+            freq.put(ps, freq.getOrDefault(ps, 0) + 1);
+        }
+        return ans;
+    }
+}</code></pre>
+</section>
+
+
+<div class="pager">
+  <a href="page-04.html">← Previous</a>
+  <a href="page-06.html">Next →</a>
+</div>
+
+</div>
+</body>
+</html>

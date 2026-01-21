@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MASTER Interview Guide – Problems 31–35</title>
+<style>
+:root { --bg:#0b0f14; --card:#111826; --text:#e6edf3; --muted:#9fb0c0; --accent:#7aa2f7; --code:#0a0e14; --border:#263244; }
+@media (prefers-color-scheme: light) {
+  :root { --bg:#ffffff; --card:#f7f9fc; --text:#0b1220; --muted:#516070; --accent:#2f6feb; --code:#0b1220; --border:#d6deea; }
+}
+html,body { margin:0; padding:0; background:var(--bg); color:var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+.container { max-width: 980px; margin: 0 auto; padding: 24px 16px 60px; }
+.topbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom: 16px; }
+.brand { font-weight: 800; letter-spacing: .2px; }
+.badge { color: var(--muted); font-size: 13px; }
+.nav a { color: var(--accent); text-decoration: none; font-weight: 600; }
+.nav a:hover { text-decoration: underline; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px 16px; margin: 14px 0; box-shadow: 0 6px 18px rgba(0,0,0,.12); }
+.h1 { font-size: 22px; font-weight: 800; margin: 0 0 8px; }
+.h2 { font-size: 16px; font-weight: 800; margin: 0 0 8px; }
+.meta { color: var(--muted); font-size: 13px; margin-bottom: 10px; }
+ul { margin: 8px 0 12px 20px; }
+pre { background: var(--code); border: 1px solid var(--border); border-radius: 12px; padding: 12px; overflow:auto; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12.5px; }
+.pager { display:flex; gap:12px; justify-content:space-between; margin-top: 18px; }
+.pager a { display:inline-block; padding: 10px 12px; border:1px solid var(--border); border-radius: 12px; color: var(--accent); text-decoration:none; font-weight:700; background: transparent; }
+.pager a:hover { filter: brightness(1.08); }
+.grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 14px; }
+.tile { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+.tile a { color: var(--accent); text-decoration:none; font-weight:800; }
+.small { color: var(--muted); font-size: 13px; margin-top: 6px; }
+hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+pre {
+    background: #f5f5f5;
+    color: #000;
+    padding: 14px;
+    border-radius: 6px;
+    border-left: 4px solid #3f51b5;
+    overflow-x: auto;
+}
+
+code {
+    color: #000;
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+</style>
+
+</head>
+<body>
+<div class="container">
+
+<div class="topbar">
+  <div>
+    <div class="brand">Problems 31–35</div>
+    <div class="badge"><a class="nav" href="index.html" style="color:var(--accent); text-decoration:none;">Index</a> • Jump: <a href="#p31">31</a> • <a href="#p32">32</a> • <a href="#p33">33</a> • <a href="#p34">34</a> • <a href="#p35">35</a></div>
+  </div>
+  <div class="nav">
+    <a href="page-06.html">← Previous</a> &nbsp; <a href="page-08.html">Next →</a>
+  </div>
+</div>
+
+
+<section class="card" id="p31">
+  <div class="h2">31. Reverse a Linked List</div>
+  <div class="meta">Linked List</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Iteratively re-point next pointers.</li>
+<li>Maintain prev and current pointers.</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(1) space.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>public class ReverseLinkedList {
+
+    static class ListNode {
+        int val;
+        ListNode next;
+        ListNode(int v) { val = v; }
+    }
+
+    public static ListNode reverse(ListNode head) {
+        ListNode prev = null, cur = head;
+
+        while (cur != null) {
+            ListNode next = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = next;
+        }
+        return prev;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p32">
+  <div class="h2">32. Reverse Linked List in Pairs</div>
+  <div class="meta">Linked List</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Use recursion: swap head with head.next.</li>
+<li>Recurse on the rest and connect.</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(n) recursion stack.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>public class ReversePairs {
+
+    static class ListNode {
+        int val;
+        ListNode next;
+        ListNode(int v) { val = v; }
+    }
+
+    public static ListNode swapPairs(ListNode head) {
+        if (head == null || head.next == null) return head;
+
+        ListNode a = head, b = head.next;
+        a.next = swapPairs(b.next);
+        b.next = a;
+
+        return b;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p33">
+  <div class="h2">33. Detect Cycle in Linked List</div>
+  <div class="meta">Linked List</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Use Floyd slow/fast pointers.</li>
+<li>If they meet, cycle exists.</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(1) space.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>public class DetectCycle {
+
+    static class ListNode {
+        int val;
+        ListNode next;
+        ListNode(int v) { val = v; }
+    }
+
+    public static boolean hasCycle(ListNode head) {
+        ListNode slow = head, fast = head;
+
+        while (fast != null &amp;&amp; fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+            if (slow == fast) return true;
+        }
+        return false;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p34">
+  <div class="h2">34. Find Starting Point of Cycle</div>
+  <div class="meta">Linked List</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>First find meeting point using Floyd.</li>
+<li>Move one pointer to head; step both 1 at a time; they meet at entry.</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(1) space.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>public class CycleStart {
+
+    static class ListNode {
+        int val;
+        ListNode next;
+        ListNode(int v) { val = v; }
+    }
+
+    public static ListNode detectCycle(ListNode head) {
+        ListNode slow = head, fast = head;
+
+        while (fast != null &amp;&amp; fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+
+            if (slow == fast) {
+                ListNode p = head;
+                while (p != slow) {
+                    p = p.next;
+                    slow = slow.next;
+                }
+                return p;
+            }
+        }
+        return null;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p35">
+  <div class="h2">35. Merge Two Sorted Linked Lists</div>
+  <div class="meta">Linked List</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Use dummy head and tail pointer.</li>
+<li>Pick smaller node each step.</li></ul>
+  <div><strong>Complexity</strong>: O(n+m) time, O(1) space.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>public class MergeTwoLists {
+
+    static class ListNode {
+        int val;
+        ListNode next;
+        ListNode(int v) { val = v; }
+    }
+
+    public static ListNode merge(ListNode a, ListNode b) {
+        ListNode dummy = new ListNode(0);
+        ListNode tail = dummy;
+
+        while (a != null &amp;&amp; b != null) {
+            if (a.val &lt;= b.val) {
+                tail.next = a;
+                a = a.next;
+            } else {
+                tail.next = b;
+                b = b.next;
+            }
+            tail = tail.next;
+        }
+
+        tail.next = (a != null) ? a : b;
+        return dummy.next;
+    }
+}</code></pre>
+</section>
+
+
+<div class="pager">
+  <a href="page-06.html">← Previous</a>
+  <a href="page-08.html">Next →</a>
+</div>
+
+</div>
+</body>
+</html>

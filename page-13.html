@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MASTER Interview Guide – Problems 61–65</title>
+<style>
+:root { --bg:#0b0f14; --card:#111826; --text:#e6edf3; --muted:#9fb0c0; --accent:#7aa2f7; --code:#0a0e14; --border:#263244; }
+@media (prefers-color-scheme: light) {
+  :root { --bg:#ffffff; --card:#f7f9fc; --text:#0b1220; --muted:#516070; --accent:#2f6feb; --code:#0b1220; --border:#d6deea; }
+}
+html,body { margin:0; padding:0; background:var(--bg); color:var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+.container { max-width: 980px; margin: 0 auto; padding: 24px 16px 60px; }
+.topbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom: 16px; }
+.brand { font-weight: 800; letter-spacing: .2px; }
+.badge { color: var(--muted); font-size: 13px; }
+.nav a { color: var(--accent); text-decoration: none; font-weight: 600; }
+.nav a:hover { text-decoration: underline; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px 16px; margin: 14px 0; box-shadow: 0 6px 18px rgba(0,0,0,.12); }
+.h1 { font-size: 22px; font-weight: 800; margin: 0 0 8px; }
+.h2 { font-size: 16px; font-weight: 800; margin: 0 0 8px; }
+.meta { color: var(--muted); font-size: 13px; margin-bottom: 10px; }
+ul { margin: 8px 0 12px 20px; }
+pre { background: var(--code); border: 1px solid var(--border); border-radius: 12px; padding: 12px; overflow:auto; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12.5px; }
+.pager { display:flex; gap:12px; justify-content:space-between; margin-top: 18px; }
+.pager a { display:inline-block; padding: 10px 12px; border:1px solid var(--border); border-radius: 12px; color: var(--accent); text-decoration:none; font-weight:700; background: transparent; }
+.pager a:hover { filter: brightness(1.08); }
+.grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 14px; }
+.tile { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+.tile a { color: var(--accent); text-decoration:none; font-weight:800; }
+.small { color: var(--muted); font-size: 13px; margin-top: 6px; }
+hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+pre {
+    background: #f5f5f5;
+    color: #000;
+    padding: 14px;
+    border-radius: 6px;
+    border-left: 4px solid #3f51b5;
+    overflow-x: auto;
+}
+
+code {
+    color: #000;
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+</style>
+
+</head>
+<body>
+<div class="container">
+
+<div class="topbar">
+  <div>
+    <div class="brand">Problems 61–65</div>
+    <div class="badge"><a class="nav" href="index.html" style="color:var(--accent); text-decoration:none;">Index</a> • Jump: <a href="#p61">61</a> • <a href="#p62">62</a> • <a href="#p63">63</a> • <a href="#p64">64</a> • <a href="#p65">65</a></div>
+  </div>
+  <div class="nav">
+    <a href="page-12.html">← Previous</a> &nbsp; <a href="page-14.html">Next →</a>
+  </div>
+</div>
+
+
+<section class="card" id="p61">
+  <div class="h2">61. Generate All Permutations</div>
+  <div class="meta">Recursion / Backtracking</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Backtrack by swapping current index with each candidate index.</li>
+<li>Recurse to next index; swap back.</li></ul>
+  <div><strong>Complexity</strong>: O(n * n!) time, O(n) stack.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>import java.util.*;
+
+public class Permutations {
+
+    public static List&lt;List&lt;Integer&gt;&gt; permute(int[] nums) {
+        List&lt;List&lt;Integer&gt;&gt; res = new ArrayList&lt;&gt;();
+        backtrack(nums, 0, res);
+        return res;
+    }
+
+    private static void backtrack(int[] a, int i, List&lt;List&lt;Integer&gt;&gt; res) {
+        if (i == a.length) {
+            List&lt;Integer&gt; one = new ArrayList&lt;&gt;();
+            for (int v : a) one.add(v);
+            res.add(one);
+            return;
+        }
+
+        for (int j = i; j &lt; a.length; j++) {
+            swap(a, i, j);
+            backtrack(a, i + 1, res);
+            swap(a, i, j);
+        }
+    }
+
+    private static void swap(int[] a, int i, int j) {
+        int t = a[i];
+        a[i] = a[j];
+        a[j] = t;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p62">
+  <div class="h2">62. Generate All Combinations (n choose k)</div>
+  <div class="meta">Recursion / Backtracking</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Backtrack choosing next number from start..n.</li>
+<li>Stop when k numbers chosen.</li></ul>
+  <div><strong>Complexity</strong>: O(C(n,k) * k) time.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>import java.util.*;
+
+public class Combinations {
+
+    public static List&lt;List&lt;Integer&gt;&gt; combine(int n, int k) {
+        List&lt;List&lt;Integer&gt;&gt; res = new ArrayList&lt;&gt;();
+        dfs(1, n, k, new ArrayList&lt;&gt;(), res);
+        return res;
+    }
+
+    private static void dfs(int start, int n, int k, List&lt;Integer&gt; cur, List&lt;List&lt;Integer&gt;&gt; res) {
+        if (cur.size() == k) {
+            res.add(new ArrayList&lt;&gt;(cur));
+            return;
+        }
+
+        for (int i = start; i &lt;= n; i++) {
+            cur.add(i);
+            dfs(i + 1, n, k, cur, res);
+            cur.remove(cur.size() - 1);
+        }
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p63">
+  <div class="h2">63. Subsets / Power Set</div>
+  <div class="meta">Recursion / Backtracking</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Iterative: start with [[]], then for each num add num to existing subsets.</li></ul>
+  <div><strong>Complexity</strong>: O(n * 2^n) time.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>import java.util.*;
+
+public class Subsets {
+
+    public static List&lt;List&lt;Integer&gt;&gt; subsets(int[] nums) {
+        List&lt;List&lt;Integer&gt;&gt; res = new ArrayList&lt;&gt;();
+        res.add(new ArrayList&lt;&gt;());
+
+        for (int x : nums) {
+            int sz = res.size();
+            for (int i = 0; i &lt; sz; i++) {
+                List&lt;Integer&gt; nxt = new ArrayList&lt;&gt;(res.get(i));
+                nxt.add(x);
+                res.add(nxt);
+            }
+        }
+        return res;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p64">
+  <div class="h2">64. N-Queens</div>
+  <div class="meta">Recursion / Backtracking</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Backtrack row by row.</li>
+<li>Track used columns and diagonals (r-c, r+c).</li>
+<li>Place queen if safe.</li></ul>
+  <div><strong>Complexity</strong>: Typical backtracking; ~O(n!) in practice.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>import java.util.*;
+
+public class NQueens {
+
+    public static List&lt;List&lt;String&gt;&gt; solveNQueens(int n) {
+        List&lt;List&lt;String&gt;&gt; res = new ArrayList&lt;&gt;();
+
+        boolean[] col = new boolean[n];
+        boolean[] d1 = new boolean[2 * n]; // r-c+n
+        boolean[] d2 = new boolean[2 * n]; // r+c
+
+        int[] pos = new int[n];
+        Arrays.fill(pos, -1);
+
+        dfs(0, n, col, d1, d2, pos, res);
+        return res;
+    }
+
+    private static void dfs(int r, int n, boolean[] col, boolean[] d1, boolean[] d2,
+                            int[] pos, List&lt;List&lt;String&gt;&gt; res) {
+        if (r == n) {
+            res.add(render(pos, n));
+            return;
+        }
+
+        for (int c = 0; c &lt; n; c++) {
+            int id1 = r - c + n, id2 = r + c;
+            if (col[c] || d1[id1] || d2[id2]) continue;
+
+            col[c] = d1[id1] = d2[id2] = true;
+            pos[r] = c;
+
+            dfs(r + 1, n, col, d1, d2, pos, res);
+
+            pos[r] = -1;
+            col[c] = d1[id1] = d2[id2] = false;
+        }
+    }
+
+    private static List&lt;String&gt; render(int[] pos, int n) {
+        List&lt;String&gt; board = new ArrayList&lt;&gt;();
+
+        for (int r = 0; r &lt; n; r++) {
+            StringBuilder sb = new StringBuilder();
+            for (int c = 0; c &lt; n; c++) sb.append(pos[r] == c ? &#x27;Q&#x27; : &#x27;.&#x27;);
+            board.add(sb.toString());
+        }
+        return board;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p65">
+  <div class="h2">65. Word Search in Grid</div>
+  <div class="meta">Recursion / Backtracking</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>DFS from each cell matching first char.</li>
+<li>Mark visited temporarily, explore 4 directions.</li>
+<li>Backtrack restore.</li></ul>
+  <div><strong>Complexity</strong>: O(R*C*4^L) worst-case (L = word length).</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>public class WordSearch {
+
+    public static boolean exist(char[][] board, String word) {
+        int r = board.length, c = board[0].length;
+
+        for (int i = 0; i &lt; r; i++) {
+            for (int j = 0; j &lt; c; j++) {
+                if (dfs(board, word, 0, i, j)) return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean dfs(char[][] b, String w, int k, int i, int j) {
+        if (k == w.length()) return true;
+        if (i &lt; 0 || j &lt; 0 || i &gt;= b.length || j &gt;= b[0].length) return false;
+        if (b[i][j] != w.charAt(k)) return false;
+
+        char tmp = b[i][j];
+        b[i][j] = &#x27;#&#x27;;
+
+        boolean ok =
+                dfs(b, w, k + 1, i + 1, j) ||
+                dfs(b, w, k + 1, i - 1, j) ||
+                dfs(b, w, k + 1, i, j + 1) ||
+                dfs(b, w, k + 1, i, j - 1);
+
+        b[i][j] = tmp;
+        return ok;
+    }
+}</code></pre>
+</section>
+
+
+<div class="pager">
+  <a href="page-12.html">← Previous</a>
+  <a href="page-14.html">Next →</a>
+</div>
+
+</div>
+</body>
+</html>

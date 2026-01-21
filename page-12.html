@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MASTER Interview Guide – Problems 56–60</title>
+<style>
+:root { --bg:#0b0f14; --card:#111826; --text:#e6edf3; --muted:#9fb0c0; --accent:#7aa2f7; --code:#0a0e14; --border:#263244; }
+@media (prefers-color-scheme: light) {
+  :root { --bg:#ffffff; --card:#f7f9fc; --text:#0b1220; --muted:#516070; --accent:#2f6feb; --code:#0b1220; --border:#d6deea; }
+}
+html,body { margin:0; padding:0; background:var(--bg); color:var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+.container { max-width: 980px; margin: 0 auto; padding: 24px 16px 60px; }
+.topbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom: 16px; }
+.brand { font-weight: 800; letter-spacing: .2px; }
+.badge { color: var(--muted); font-size: 13px; }
+.nav a { color: var(--accent); text-decoration: none; font-weight: 600; }
+.nav a:hover { text-decoration: underline; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px 16px; margin: 14px 0; box-shadow: 0 6px 18px rgba(0,0,0,.12); }
+.h1 { font-size: 22px; font-weight: 800; margin: 0 0 8px; }
+.h2 { font-size: 16px; font-weight: 800; margin: 0 0 8px; }
+.meta { color: var(--muted); font-size: 13px; margin-bottom: 10px; }
+ul { margin: 8px 0 12px 20px; }
+pre { background: var(--code); border: 1px solid var(--border); border-radius: 12px; padding: 12px; overflow:auto; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12.5px; }
+.pager { display:flex; gap:12px; justify-content:space-between; margin-top: 18px; }
+.pager a { display:inline-block; padding: 10px 12px; border:1px solid var(--border); border-radius: 12px; color: var(--accent); text-decoration:none; font-weight:700; background: transparent; }
+.pager a:hover { filter: brightness(1.08); }
+.grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 14px; }
+.tile { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+.tile a { color: var(--accent); text-decoration:none; font-weight:800; }
+.small { color: var(--muted); font-size: 13px; margin-top: 6px; }
+hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+pre {
+    background: #f5f5f5;
+    color: #000;
+    padding: 14px;
+    border-radius: 6px;
+    border-left: 4px solid #3f51b5;
+    overflow-x: auto;
+}
+
+code {
+    color: #000;
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+</style>
+
+</head>
+<body>
+<div class="container">
+
+<div class="topbar">
+  <div>
+    <div class="brand">Problems 56–60</div>
+    <div class="badge"><a class="nav" href="index.html" style="color:var(--accent); text-decoration:none;">Index</a> • Jump: <a href="#p56">56</a> • <a href="#p57">57</a> • <a href="#p58">58</a> • <a href="#p59">59</a> • <a href="#p60">60</a></div>
+  </div>
+  <div class="nav">
+    <a href="page-11.html">← Previous</a> &nbsp; <a href="page-13.html">Next →</a>
+  </div>
+</div>
+
+
+<section class="card" id="p56">
+  <div class="h2">56. Lowest Common Ancestor (Binary Tree)</div>
+  <div class="meta">Trees / BST</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>If node is null or equals p/q, return node.</li>
+<li>Recurse left and right; if both non-null, current is LCA; else return non-null side.</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(h) stack.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>public class LCA {
+
+    static class TreeNode {
+        int val;
+        TreeNode left, right;
+        TreeNode(int v) { val = v; }
+    }
+
+    public static TreeNode lca(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null || root == p || root == q) return root;
+
+        TreeNode left = lca(root.left, p, q);
+        TreeNode right = lca(root.right, p, q);
+
+        if (left != null &amp;&amp; right != null) return root;
+        return left != null ? left : right;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p57">
+  <div class="h2">57. Validate Binary Search Tree</div>
+  <div class="meta">Trees / BST</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>DFS with bounds (min, max).</li>
+<li>Each node must satisfy min &lt; val &lt; max.</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(h) stack.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>public class ValidateBST {
+
+    static class TreeNode {
+        int val;
+        TreeNode left, right;
+        TreeNode(int v) { val = v; }
+    }
+
+    public static boolean isValidBST(TreeNode root) {
+        return dfs(root, Long.MIN_VALUE, Long.MAX_VALUE);
+    }
+
+    private static boolean dfs(TreeNode n, long lo, long hi) {
+        if (n == null) return true;
+        if (n.val &lt;= lo || n.val &gt;= hi) return false;
+        return dfs(n.left, lo, n.val) &amp;&amp; dfs(n.right, n.val, hi);
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p58">
+  <div class="h2">58. Mirror (Invert) a Binary Tree</div>
+  <div class="meta">Trees / BST</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Swap left and right recursively (or BFS).</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(h) stack.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>public class InvertTree {
+
+    static class TreeNode {
+        int val;
+        TreeNode left, right;
+        TreeNode(int v) { val = v; }
+    }
+
+    public static TreeNode invert(TreeNode root) {
+        if (root == null) return null;
+
+        TreeNode tmp = root.left;
+        root.left = invert(root.right);
+        root.right = invert(tmp);
+
+        return root;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p59">
+  <div class="h2">59. Serialize and Deserialize Binary Tree (BFS)</div>
+  <div class="meta">Trees / BST</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Serialize: BFS; output values separated by commas; use &#x27;#&#x27; for null.</li>
+<li>Deserialize: BFS; rebuild children from tokens.</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(n) space.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>import java.util.*;
+
+public class Codec {
+
+    static class TreeNode {
+        int val;
+        TreeNode left, right;
+        TreeNode(int v) { val = v; }
+    }
+
+    public static String serialize(TreeNode root) {
+        if (root == null) return &quot;&quot;;
+
+        StringBuilder sb = new StringBuilder();
+        Deque&lt;TreeNode&gt; q = new ArrayDeque&lt;&gt;();
+        q.add(root);
+
+        while (!q.isEmpty()) {
+            TreeNode n = q.remove();
+            if (n == null) {
+                sb.append(&quot;#,&quot;);
+                continue;
+            }
+            sb.append(n.val).append(&#x27;,&#x27;);
+            q.add(n.left);
+            q.add(n.right);
+        }
+        return sb.toString();
+    }
+
+    public static TreeNode deserialize(String data) {
+        if (data == null || data.isEmpty()) return null;
+
+        String[] t = data.split(&quot;,&quot;);
+        int i = 0;
+
+        TreeNode root = new TreeNode(Integer.parseInt(t[i++]));
+        Deque&lt;TreeNode&gt; q = new ArrayDeque&lt;&gt;();
+        q.add(root);
+
+        while (!q.isEmpty()) {
+            TreeNode cur = q.remove();
+            if (cur == null) continue;
+
+            String left = t[i++];
+            String right = t[i++];
+
+            if (!left.equals(&quot;#&quot;)) cur.left = new TreeNode(Integer.parseInt(left));
+            if (!right.equals(&quot;#&quot;)) cur.right = new TreeNode(Integer.parseInt(right));
+
+            q.add(cur.left);
+            q.add(cur.right);
+        }
+        return root;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p60">
+  <div class="h2">60. Path Sum (Root-to-Leaf Equals Target)</div>
+  <div class="meta">Trees / BST</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>DFS subtracting node value from target.</li>
+<li>At leaf, check remaining == node.val.</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(h) stack.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>public class PathSum {
+
+    static class TreeNode {
+        int val;
+        TreeNode left, right;
+        TreeNode(int v) { val = v; }
+    }
+
+    public static boolean hasPathSum(TreeNode root, int target) {
+        if (root == null) return false;
+
+        if (root.left == null &amp;&amp; root.right == null) {
+            return target == root.val;
+        }
+
+        int rem = target - root.val;
+        return hasPathSum(root.left, rem) || hasPathSum(root.right, rem);
+    }
+}</code></pre>
+</section>
+
+
+<div class="pager">
+  <a href="page-11.html">← Previous</a>
+  <a href="page-13.html">Next →</a>
+</div>
+
+</div>
+</body>
+</html>

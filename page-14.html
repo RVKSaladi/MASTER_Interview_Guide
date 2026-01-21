@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MASTER Interview Guide – Problems 66–70</title>
+<style>
+:root { --bg:#0b0f14; --card:#111826; --text:#e6edf3; --muted:#9fb0c0; --accent:#7aa2f7; --code:#0a0e14; --border:#263244; }
+@media (prefers-color-scheme: light) {
+  :root { --bg:#ffffff; --card:#f7f9fc; --text:#0b1220; --muted:#516070; --accent:#2f6feb; --code:#0b1220; --border:#d6deea; }
+}
+html,body { margin:0; padding:0; background:var(--bg); color:var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+.container { max-width: 980px; margin: 0 auto; padding: 24px 16px 60px; }
+.topbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom: 16px; }
+.brand { font-weight: 800; letter-spacing: .2px; }
+.badge { color: var(--muted); font-size: 13px; }
+.nav a { color: var(--accent); text-decoration: none; font-weight: 600; }
+.nav a:hover { text-decoration: underline; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px 16px; margin: 14px 0; box-shadow: 0 6px 18px rgba(0,0,0,.12); }
+.h1 { font-size: 22px; font-weight: 800; margin: 0 0 8px; }
+.h2 { font-size: 16px; font-weight: 800; margin: 0 0 8px; }
+.meta { color: var(--muted); font-size: 13px; margin-bottom: 10px; }
+ul { margin: 8px 0 12px 20px; }
+pre { background: var(--code); border: 1px solid var(--border); border-radius: 12px; padding: 12px; overflow:auto; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12.5px; }
+.pager { display:flex; gap:12px; justify-content:space-between; margin-top: 18px; }
+.pager a { display:inline-block; padding: 10px 12px; border:1px solid var(--border); border-radius: 12px; color: var(--accent); text-decoration:none; font-weight:700; background: transparent; }
+.pager a:hover { filter: brightness(1.08); }
+.grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 14px; }
+.tile { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+.tile a { color: var(--accent); text-decoration:none; font-weight:800; }
+.small { color: var(--muted); font-size: 13px; margin-top: 6px; }
+hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+pre {
+    background: #f5f5f5;
+    color: #000;
+    padding: 14px;
+    border-radius: 6px;
+    border-left: 4px solid #3f51b5;
+    overflow-x: auto;
+}
+
+code {
+    color: #000;
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+</style>
+
+</head>
+<body>
+<div class="container">
+
+<div class="topbar">
+  <div>
+    <div class="brand">Problems 66–70</div>
+    <div class="badge"><a class="nav" href="index.html" style="color:var(--accent); text-decoration:none;">Index</a> • Jump: <a href="#p66">66</a> • <a href="#p67">67</a> • <a href="#p68">68</a> • <a href="#p69">69</a> • <a href="#p70">70</a></div>
+  </div>
+  <div class="nav">
+    <a href="page-13.html">← Previous</a> &nbsp; <a href="page-15.html">Next →</a>
+  </div>
+</div>
+
+
+<section class="card" id="p66">
+  <div class="h2">66. Combination Sum (Reuse Elements Allowed)</div>
+  <div class="meta">Recursion / Backtracking</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Sort candidates.</li>
+<li>Backtrack with current sum; allow reusing same index.</li>
+<li>Stop when sum == target or sum &gt; target.</li></ul>
+  <div><strong>Complexity</strong>: Exponential backtracking.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>import java.util.*;
+
+public class CombinationSum {
+
+    public static List&lt;List&lt;Integer&gt;&gt; combinationSum(int[] cand, int target) {
+        Arrays.sort(cand);
+        List&lt;List&lt;Integer&gt;&gt; res = new ArrayList&lt;&gt;();
+        dfs(cand, 0, target, new ArrayList&lt;&gt;(), res);
+        return res;
+    }
+
+    private static void dfs(int[] a, int start, int target, List&lt;Integer&gt; cur, List&lt;List&lt;Integer&gt;&gt; res) {
+        if (target == 0) {
+            res.add(new ArrayList&lt;&gt;(cur));
+            return;
+        }
+
+        for (int i = start; i &lt; a.length; i++) {
+            if (a[i] &gt; target) break;
+            cur.add(a[i]);
+            dfs(a, i, target - a[i], cur, res);
+            cur.remove(cur.size() - 1);
+        }
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p67">
+  <div class="h2">67. Rat in a Maze (Find One Path)</div>
+  <div class="meta">Recursion / Backtracking</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Backtrack from (0,0) to (n-1,n-1).</li>
+<li>Move in 4 directions; mark visited.</li>
+<li>Return when destination reached.</li></ul>
+  <div><strong>Complexity</strong>: Exponential worst-case.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>public class RatInMaze {
+
+    private static final int[] dr = {1, -1, 0, 0};
+    private static final int[] dc = {0, 0, 1, -1};
+
+    public static boolean solve(int[][] maze, int r, int c, boolean[][] vis) {
+        int n = maze.length;
+
+        if (r &lt; 0 || c &lt; 0 || r &gt;= n || c &gt;= n) return false;
+        if (maze[r][c] == 0 || vis[r][c]) return false;
+        if (r == n - 1 &amp;&amp; c == n - 1) return true;
+
+        vis[r][c] = true;
+
+        for (int k = 0; k &lt; 4; k++) {
+            if (solve(maze, r + dr[k], c + dc[k], vis)) return true;
+        }
+
+        vis[r][c] = false;
+        return false;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p68">
+  <div class="h2">68. Sudoku Solver</div>
+  <div class="meta">Recursion / Backtracking</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Backtrack on empty cells.</li>
+<li>Try digits 1..9 that keep row/col/box valid.</li>
+<li>Recurse; if fail, reset cell.</li></ul>
+  <div><strong>Complexity</strong>: Backtracking; fast in practice with pruning.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>public class SudokuSolver {
+
+    public static void solveSudoku(char[][] board) {
+        solve(board);
+    }
+
+    private static boolean solve(char[][] b) {
+        for (int r = 0; r &lt; 9; r++) {
+            for (int c = 0; c &lt; 9; c++) {
+                if (b[r][c] == &#x27;.&#x27;) {
+                    for (char d = &#x27;1&#x27;; d &lt;= &#x27;9&#x27;; d++) {
+                        if (ok(b, r, c, d)) {
+                            b[r][c] = d;
+                            if (solve(b)) return true;
+                            b[r][c] = &#x27;.&#x27;;
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private static boolean ok(char[][] b, int r, int c, char d) {
+        for (int i = 0; i &lt; 9; i++) {
+            if (b[r][i] == d) return false;
+            if (b[i][c] == d) return false;
+        }
+
+        int br = (r / 3) * 3, bc = (c / 3) * 3;
+        for (int i = br; i &lt; br + 3; i++) {
+            for (int j = bc; j &lt; bc + 3; j++) {
+                if (b[i][j] == d) return false;
+            }
+        }
+        return true;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p69">
+  <div class="h2">69. Print Even and Odd Numbers Using Two Threads</div>
+  <div class="meta">Concurrency / Multithreading</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Share a lock and current number.</li>
+<li>Odd thread waits while number is even; even thread waits while number is odd.</li>
+<li>Use wait/notifyAll.</li></ul>
+  <div><strong>Complexity</strong>: O(n) time.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>public class EvenOddPrinter {
+
+    private final Object lock = new Object();
+    private int cur = 1;
+    private final int max;
+
+    public EvenOddPrinter(int max) {
+        this.max = max;
+    }
+
+    public void printOdd() throws InterruptedException {
+        while (true) {
+            synchronized (lock) {
+                while (cur &lt;= max &amp;&amp; (cur % 2 == 0)) {
+                    lock.wait();
+                }
+                if (cur &gt; max) {
+                    lock.notifyAll();
+                    return;
+                }
+                System.out.println(&quot;Odd: &quot; + cur++);
+                lock.notifyAll();
+            }
+        }
+    }
+
+    public void printEven() throws InterruptedException {
+        while (true) {
+            synchronized (lock) {
+                while (cur &lt;= max &amp;&amp; (cur % 2 == 1)) {
+                    lock.wait();
+                }
+                if (cur &gt; max) {
+                    lock.notifyAll();
+                    return;
+                }
+                System.out.println(&quot;Even: &quot; + cur++);
+                lock.notifyAll();
+            }
+        }
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p70">
+  <div class="h2">70. Producer–Consumer Problem (Bounded Buffer)</div>
+  <div class="meta">Concurrency / Multithreading</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Use a BlockingQueue with capacity.</li>
+<li>Producer puts; consumer takes.</li>
+<li>BlockingQueue handles waiting safely.</li></ul>
+  <div><strong>Complexity</strong>: O(ops) time.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>import java.util.concurrent.*;
+
+public class ProducerConsumer {
+
+    public static void main(String[] args) {
+        BlockingQueue&lt;Integer&gt; q = new ArrayBlockingQueue&lt;&gt;(10);
+
+        Runnable producer = () -&gt; {
+            try {
+                for (int i = 0; i &lt; 100; i++) q.put(i);
+            } catch (InterruptedException ignored) {}
+        };
+
+        Runnable consumer = () -&gt; {
+            try {
+                for (int i = 0; i &lt; 100; i++) System.out.println(q.take());
+            } catch (InterruptedException ignored) {}
+        };
+
+        new Thread(producer).start();
+        new Thread(consumer).start();
+    }
+}</code></pre>
+</section>
+
+
+<div class="pager">
+  <a href="page-13.html">← Previous</a>
+  <a href="page-15.html">Next →</a>
+</div>
+
+</div>
+</body>
+</html>

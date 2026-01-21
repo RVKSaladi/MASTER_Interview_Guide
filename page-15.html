@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MASTER Interview Guide – Problems 71–75</title>
+<style>
+:root { --bg:#0b0f14; --card:#111826; --text:#e6edf3; --muted:#9fb0c0; --accent:#7aa2f7; --code:#0a0e14; --border:#263244; }
+@media (prefers-color-scheme: light) {
+  :root { --bg:#ffffff; --card:#f7f9fc; --text:#0b1220; --muted:#516070; --accent:#2f6feb; --code:#0b1220; --border:#d6deea; }
+}
+html,body { margin:0; padding:0; background:var(--bg); color:var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+.container { max-width: 980px; margin: 0 auto; padding: 24px 16px 60px; }
+.topbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom: 16px; }
+.brand { font-weight: 800; letter-spacing: .2px; }
+.badge { color: var(--muted); font-size: 13px; }
+.nav a { color: var(--accent); text-decoration: none; font-weight: 600; }
+.nav a:hover { text-decoration: underline; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px 16px; margin: 14px 0; box-shadow: 0 6px 18px rgba(0,0,0,.12); }
+.h1 { font-size: 22px; font-weight: 800; margin: 0 0 8px; }
+.h2 { font-size: 16px; font-weight: 800; margin: 0 0 8px; }
+.meta { color: var(--muted); font-size: 13px; margin-bottom: 10px; }
+ul { margin: 8px 0 12px 20px; }
+pre { background: var(--code); border: 1px solid var(--border); border-radius: 12px; padding: 12px; overflow:auto; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12.5px; }
+.pager { display:flex; gap:12px; justify-content:space-between; margin-top: 18px; }
+.pager a { display:inline-block; padding: 10px 12px; border:1px solid var(--border); border-radius: 12px; color: var(--accent); text-decoration:none; font-weight:700; background: transparent; }
+.pager a:hover { filter: brightness(1.08); }
+.grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 14px; }
+.tile { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+.tile a { color: var(--accent); text-decoration:none; font-weight:800; }
+.small { color: var(--muted); font-size: 13px; margin-top: 6px; }
+hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+pre {
+    background: #f5f5f5;
+    color: #000;
+    padding: 14px;
+    border-radius: 6px;
+    border-left: 4px solid #3f51b5;
+    overflow-x: auto;
+}
+
+code {
+    color: #000;
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+</style>
+
+</head>
+<body>
+<div class="container">
+
+<div class="topbar">
+  <div>
+    <div class="brand">Problems 71–75</div>
+    <div class="badge"><a class="nav" href="index.html" style="color:var(--accent); text-decoration:none;">Index</a> • Jump: <a href="#p71">71</a> • <a href="#p72">72</a> • <a href="#p73">73</a> • <a href="#p74">74</a> • <a href="#p75">75</a></div>
+  </div>
+  <div class="nav">
+    <a href="page-14.html">← Previous</a> &nbsp; <a href="page-16.html">Next →</a>
+  </div>
+</div>
+
+
+<section class="card" id="p71">
+  <div class="h2">71. Implement Thread-Safe Singleton</div>
+  <div class="meta">Concurrency / Multithreading</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Use double-checked locking with volatile instance.</li>
+<li>Lazy init with synchronized only on first creation.</li></ul>
+  <div><strong>Complexity</strong>: O(1) access after init.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>public class Singleton {
+
+    private static volatile Singleton INSTANCE;
+
+    private Singleton() {}
+
+    public static Singleton getInstance() {
+        if (INSTANCE == null) {
+            synchronized (Singleton.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new Singleton();
+                }
+            }
+        }
+        return INSTANCE;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p72">
+  <div class="h2">72. Rate Limiter (Token Bucket, In-Memory)</div>
+  <div class="meta">Concurrency / Multithreading</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Keep tokens and lastRefillTime.</li>
+<li>On allow(): refill based on elapsed time, then consume one token if available.</li></ul>
+  <div><strong>Complexity</strong>: O(1) per request.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>public class TokenBucketRateLimiter {
+
+    private final long capacity;
+    private final double refillPerMillis;
+    private double tokens;
+    private long lastRefill;
+
+    public TokenBucketRateLimiter(long capacity, long refillPerSecond) {
+        this.capacity = capacity;
+        this.refillPerMillis = refillPerSecond / 1000.0;
+        this.tokens = capacity;
+        this.lastRefill = System.currentTimeMillis();
+    }
+
+    public synchronized boolean allow() {
+        long now = System.currentTimeMillis();
+        long elapsed = now - lastRefill;
+
+        if (elapsed &gt; 0) {
+            tokens = Math.min(capacity, tokens + elapsed * refillPerMillis);
+            lastRefill = now;
+        }
+
+        if (tokens &gt;= 1.0) {
+            tokens -= 1.0;
+            return true;
+        }
+        return false;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p73">
+  <div class="h2">73. Thread-Safe Counter</div>
+  <div class="meta">Concurrency / Multithreading</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Use AtomicLong for lock-free increments.</li>
+<li>Or synchronize if you need compound operations.</li></ul>
+  <div><strong>Complexity</strong>: O(1) per op.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>import java.util.concurrent.atomic.AtomicLong;
+
+public class AtomicCounter {
+
+    private final AtomicLong value = new AtomicLong(0);
+
+    public long inc() {
+        return value.incrementAndGet();
+    }
+
+    public long get() {
+        return value.get();
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p74">
+  <div class="h2">74. Deadlock Avoidance via Lock Ordering</div>
+  <div class="meta">Concurrency / Multithreading</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Always acquire locks in a consistent global order.</li>
+<li>For two objects, order by a unique id.</li></ul>
+  <div><strong>Complexity</strong>: Prevents circular wait.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>public class DeadlockFreeTransfer {
+
+    static class Account {
+        final int id;
+        int balance;
+
+        Account(int id, int bal) {
+            this.id = id;
+            this.balance = bal;
+        }
+    }
+
+    public static void transfer(Account from, Account to, int amt) {
+        Account first = from.id &lt; to.id ? from : to;
+        Account second = from.id &lt; to.id ? to : from;
+
+        synchronized (first) {
+            synchronized (second) {
+                if (from.balance &gt;= amt) {
+                    from.balance -= amt;
+                    to.balance += amt;
+                }
+            }
+        }
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p75">
+  <div class="h2">75. LRU Cache (O(1) get/put)</div>
+  <div class="meta">Design-Oriented Coding</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Use LinkedHashMap in access-order.</li>
+<li>Evict least-recently-used when size exceeds capacity.</li></ul>
+  <div><strong>Complexity</strong>: O(1) average per operation.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>import java.util.*;
+
+public class LRUCache {
+
+    private final int capacity;
+    private final LinkedHashMap&lt;Integer, Integer&gt; map;
+
+    public LRUCache(int capacity) {
+        this.capacity = capacity;
+        this.map = new LinkedHashMap&lt;&gt;(16, 0.75f, true) {
+            protected boolean removeEldestEntry(Map.Entry&lt;Integer, Integer&gt; e) {
+                return size() &gt; LRUCache.this.capacity;
+            }
+        };
+    }
+
+    public int get(int key) {
+        return map.getOrDefault(key, -1);
+    }
+
+    public void put(int key, int value) {
+        map.put(key, value);
+    }
+}</code></pre>
+</section>
+
+
+<div class="pager">
+  <a href="page-14.html">← Previous</a>
+  <a href="page-16.html">Next →</a>
+</div>
+
+</div>
+</body>
+</html>

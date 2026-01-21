@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MASTER Interview Guide – Problems 1–5</title>
+<style>
+:root { --bg:#0b0f14; --card:#111826; --text:#e6edf3; --muted:#9fb0c0; --accent:#7aa2f7; --code:#0a0e14; --border:#263244; }
+@media (prefers-color-scheme: light) {
+  :root { --bg:#ffffff; --card:#f7f9fc; --text:#0b1220; --muted:#516070; --accent:#2f6feb; --code:#0b1220; --border:#d6deea; }
+}
+html,body { margin:0; padding:0; background:var(--bg); color:var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+.container { max-width: 980px; margin: 0 auto; padding: 24px 16px 60px; }
+.topbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom: 16px; }
+.brand { font-weight: 800; letter-spacing: .2px; }
+.badge { color: var(--muted); font-size: 13px; }
+.nav a { color: var(--accent); text-decoration: none; font-weight: 600; }
+.nav a:hover { text-decoration: underline; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px 16px; margin: 14px 0; box-shadow: 0 6px 18px rgba(0,0,0,.12); }
+.h1 { font-size: 22px; font-weight: 800; margin: 0 0 8px; }
+.h2 { font-size: 16px; font-weight: 800; margin: 0 0 8px; }
+.meta { color: var(--muted); font-size: 13px; margin-bottom: 10px; }
+ul { margin: 8px 0 12px 20px; }
+pre { background: var(--code); border: 1px solid var(--border); border-radius: 12px; padding: 12px; overflow:auto; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12.5px; }
+.pager { display:flex; gap:12px; justify-content:space-between; margin-top: 18px; }
+.pager a { display:inline-block; padding: 10px 12px; border:1px solid var(--border); border-radius: 12px; color: var(--accent); text-decoration:none; font-weight:700; background: transparent; }
+.pager a:hover { filter: brightness(1.08); }
+.grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 14px; }
+.tile { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+.tile a { color: var(--accent); text-decoration:none; font-weight:800; }
+.small { color: var(--muted); font-size: 13px; margin-top: 6px; }
+hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+
+pre {
+    background: #f5f5f5;
+    color: #000;
+    padding: 14px;
+    border-radius: 6px;
+    border-left: 4px solid #3f51b5;
+    overflow-x: auto;
+}
+
+code {
+    color: #000;
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+
+</style>
+
+</head>
+<body>
+<div class="container">
+
+<div class="topbar">
+  <div>
+    <div class="brand">Problems 1–5</div>
+    <div class="badge"><a class="nav" href="index.html" style="color:var(--accent); text-decoration:none;">Index</a> • Jump: <a href="#p1">1</a> • <a href="#p2">2</a> • <a href="#p3">3</a> • <a href="#p4">4</a> • <a href="#p5">5</a></div>
+  </div>
+  <div class="nav">
+    <span></span> &nbsp; <a href="page-02.html">Next →</a>
+  </div>
+</div>
+
+
+<section class="card" id="p1">
+  <div class="h2">1. First Non-Repeating Character</div>
+  <div class="meta">Strings + HashMap / Sliding Window</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Count characters while preserving order (LinkedHashMap).</li>
+<li>Scan the map to find the first character with count == 1.</li>
+<li>Return placeholder if none.</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(1) or O(k) space (k = charset size).</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>import java.util.*;
+
+public class FirstUniqueChar {
+
+    public static char firstUnique(String s) {
+        Map&lt;Character, Integer&gt; freq = new LinkedHashMap&lt;&gt;();
+
+        for (char c : s.toCharArray()) {
+            freq.put(c, freq.getOrDefault(c, 0) + 1);
+        }
+
+        for (Map.Entry&lt;Character, Integer&gt; e : freq.entrySet()) {
+            if (e.getValue() == 1) return e.getKey();
+        }
+        return &#x27;_&#x27;;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p2">
+  <div class="h2">2. First Repeating Character</div>
+  <div class="meta">Strings + HashMap / Sliding Window</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Use a HashSet to track seen characters.</li>
+<li>Scan left to right; the first char already in set is the answer.</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(k) space.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>import java.util.*;
+
+public class FirstRepeatingChar {
+
+    public static char firstRepeating(String s) {
+        Set&lt;Character&gt; seen = new HashSet&lt;&gt;();
+
+        for (char c : s.toCharArray()) {
+            if (!seen.add(c)) return c;
+        }
+        return &#x27;_&#x27;;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p3">
+  <div class="h2">3. Check if Two Strings Are Anagrams</div>
+  <div class="meta">Strings + HashMap / Sliding Window</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>If lengths differ, return false.</li>
+<li>Count chars in first string; subtract with second.</li>
+<li>Verify all counts are zero.</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(1) space for ASCII.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>public class Anagram {
+
+    public static boolean isAnagram(String a, String b) {
+        if (a == null || b == null || a.length() != b.length()) return false;
+
+        int[] cnt = new int[256];
+
+        for (int i = 0; i &lt; a.length(); i++) cnt[a.charAt(i)]++;
+        for (int i = 0; i &lt; b.length(); i++) cnt[b.charAt(i)]--;
+
+        for (int x : cnt) if (x != 0) return false;
+        return true;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p4">
+  <div class="h2">4. Find All Anagrams of Pattern in a String</div>
+  <div class="meta">Strings + HashMap / Sliding Window</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Sliding window of size p.length().</li>
+<li>Maintain frequency difference array (pattern counts minus window counts).</li>
+<li>When all differences are zero, record start index.</li></ul>
+  <div><strong>Complexity</strong>: O(n * A) with naive allZero check (A=256 here).</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>import java.util.*;
+
+public class FindAllAnagrams {
+
+    public static List&lt;Integer&gt; find(String s, String p) {
+        List&lt;Integer&gt; ans = new ArrayList&lt;&gt;();
+        if (s == null || p == null || s.length() &lt; p.length()) return ans;
+
+        int[] diff = new int[256];
+        for (char c : p.toCharArray()) diff[c]++;
+
+        int m = p.length();
+
+        for (int i = 0; i &lt; s.length(); i++) {
+            diff[s.charAt(i)]--;
+
+            if (i &gt;= m) diff[s.charAt(i - m)]++;
+
+            if (i &gt;= m - 1 &amp;&amp; allZero(diff)) ans.add(i - m + 1);
+        }
+        return ans;
+    }
+
+    private static boolean allZero(int[] a) {
+        for (int x : a) if (x != 0) return false;
+        return true;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p5">
+  <div class="h2">5. Longest Substring Without Repeating Characters</div>
+  <div class="meta">Strings + HashMap / Sliding Window</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Use sliding window with HashMap lastSeen index.</li>
+<li>Expand right; if char repeats inside window, move left.</li>
+<li>Track maximum window length.</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(k) space.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>import java.util.*;
+
+public class LongestUniqueSubstring {
+
+    public static int lengthOfLongestSubstring(String s) {
+        Map&lt;Character, Integer&gt; last = new HashMap&lt;&gt;();
+        int left = 0, best = 0;
+
+        for (int right = 0; right &lt; s.length(); right++) {
+            char c = s.charAt(right);
+
+            if (last.containsKey(c)) {
+                left = Math.max(left, last.get(c) + 1);
+            }
+
+            last.put(c, right);
+            best = Math.max(best, right - left + 1);
+        }
+        return best;
+    }
+}</code></pre>
+</section>
+
+
+<div class="pager">
+  <span></span>
+  <a href="page-02.html">Next →</a>
+</div>
+
+</div>
+</body>
+</html>

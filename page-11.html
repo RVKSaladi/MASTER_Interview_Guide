@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MASTER Interview Guide – Problems 51–55</title>
+<style>
+:root { --bg:#0b0f14; --card:#111826; --text:#e6edf3; --muted:#9fb0c0; --accent:#7aa2f7; --code:#0a0e14; --border:#263244; }
+@media (prefers-color-scheme: light) {
+  :root { --bg:#ffffff; --card:#f7f9fc; --text:#0b1220; --muted:#516070; --accent:#2f6feb; --code:#0b1220; --border:#d6deea; }
+}
+html,body { margin:0; padding:0; background:var(--bg); color:var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+.container { max-width: 980px; margin: 0 auto; padding: 24px 16px 60px; }
+.topbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom: 16px; }
+.brand { font-weight: 800; letter-spacing: .2px; }
+.badge { color: var(--muted); font-size: 13px; }
+.nav a { color: var(--accent); text-decoration: none; font-weight: 600; }
+.nav a:hover { text-decoration: underline; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px 16px; margin: 14px 0; box-shadow: 0 6px 18px rgba(0,0,0,.12); }
+.h1 { font-size: 22px; font-weight: 800; margin: 0 0 8px; }
+.h2 { font-size: 16px; font-weight: 800; margin: 0 0 8px; }
+.meta { color: var(--muted); font-size: 13px; margin-bottom: 10px; }
+ul { margin: 8px 0 12px 20px; }
+pre { background: var(--code); border: 1px solid var(--border); border-radius: 12px; padding: 12px; overflow:auto; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12.5px; }
+.pager { display:flex; gap:12px; justify-content:space-between; margin-top: 18px; }
+.pager a { display:inline-block; padding: 10px 12px; border:1px solid var(--border); border-radius: 12px; color: var(--accent); text-decoration:none; font-weight:700; background: transparent; }
+.pager a:hover { filter: brightness(1.08); }
+.grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 14px; }
+.tile { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+.tile a { color: var(--accent); text-decoration:none; font-weight:800; }
+.small { color: var(--muted); font-size: 13px; margin-top: 6px; }
+hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+pre {
+    background: #f5f5f5;
+    color: #000;
+    padding: 14px;
+    border-radius: 6px;
+    border-left: 4px solid #3f51b5;
+    overflow-x: auto;
+}
+
+code {
+    color: #000;
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+</style>
+
+</head>
+<body>
+<div class="container">
+
+<div class="topbar">
+  <div>
+    <div class="brand">Problems 51–55</div>
+    <div class="badge"><a class="nav" href="index.html" style="color:var(--accent); text-decoration:none;">Index</a> • Jump: <a href="#p51">51</a> • <a href="#p52">52</a> • <a href="#p53">53</a> • <a href="#p54">54</a> • <a href="#p55">55</a></div>
+  </div>
+  <div class="nav">
+    <a href="page-10.html">← Previous</a> &nbsp; <a href="page-12.html">Next →</a>
+  </div>
+</div>
+
+
+<section class="card" id="p51">
+  <div class="h2">51. Inorder Traversal (Iterative)</div>
+  <div class="meta">Trees / BST</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Use stack; push left chain.</li>
+<li>Pop node, visit, then go right.</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(h) space.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>import java.util.*;
+
+public class InorderTraversal {
+
+    static class TreeNode {
+        int val;
+        TreeNode left, right;
+        TreeNode(int v) { val = v; }
+    }
+
+    public static List&lt;Integer&gt; inorder(TreeNode root) {
+        List&lt;Integer&gt; res = new ArrayList&lt;&gt;();
+        Deque&lt;TreeNode&gt; st = new ArrayDeque&lt;&gt;();
+        TreeNode cur = root;
+
+        while (cur != null || !st.isEmpty()) {
+            while (cur != null) {
+                st.push(cur);
+                cur = cur.left;
+            }
+            cur = st.pop();
+            res.add(cur.val);
+            cur = cur.right;
+        }
+        return res;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p52">
+  <div class="h2">52. Level Order Traversal</div>
+  <div class="meta">Trees / BST</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>BFS with queue.</li>
+<li>Process nodes level by level (track size).</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(n) space.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>import java.util.*;
+
+public class LevelOrder {
+
+    static class TreeNode {
+        int val;
+        TreeNode left, right;
+        TreeNode(int v) { val = v; }
+    }
+
+    public static List&lt;List&lt;Integer&gt;&gt; levelOrder(TreeNode root) {
+        List&lt;List&lt;Integer&gt;&gt; res = new ArrayList&lt;&gt;();
+        if (root == null) return res;
+
+        Deque&lt;TreeNode&gt; q = new ArrayDeque&lt;&gt;();
+        q.add(root);
+
+        while (!q.isEmpty()) {
+            int sz = q.size();
+            List&lt;Integer&gt; level = new ArrayList&lt;&gt;();
+
+            for (int i = 0; i &lt; sz; i++) {
+                TreeNode n = q.remove();
+                level.add(n.val);
+                if (n.left != null) q.add(n.left);
+                if (n.right != null) q.add(n.right);
+            }
+            res.add(level);
+        }
+        return res;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p53">
+  <div class="h2">53. Height of Binary Tree</div>
+  <div class="meta">Trees / BST</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Recursive: height = 1 + max(left, right).</li>
+<li>Base case: null -&gt; 0.</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(h) stack.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>public class TreeHeight {
+
+    static class TreeNode {
+        int val;
+        TreeNode left, right;
+        TreeNode(int v) { val = v; }
+    }
+
+    public static int height(TreeNode root) {
+        if (root == null) return 0;
+        return 1 + Math.max(height(root.left), height(root.right));
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p54">
+  <div class="h2">54. Check if Tree is Balanced</div>
+  <div class="meta">Trees / BST</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Compute height bottom-up.</li>
+<li>If any subtree differs by &gt; 1, return -1 as sentinel.</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(h) stack.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>public class BalancedTree {
+
+    static class TreeNode {
+        int val;
+        TreeNode left, right;
+        TreeNode(int v) { val = v; }
+    }
+
+    public static boolean isBalanced(TreeNode root) {
+        return dfs(root) != -1;
+    }
+
+    private static int dfs(TreeNode n) {
+        if (n == null) return 0;
+
+        int lh = dfs(n.left);
+        if (lh == -1) return -1;
+
+        int rh = dfs(n.right);
+        if (rh == -1) return -1;
+
+        if (Math.abs(lh - rh) &gt; 1) return -1;
+        return 1 + Math.max(lh, rh);
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p55">
+  <div class="h2">55. Diameter of Binary Tree</div>
+  <div class="meta">Trees / BST</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>DFS returns height.</li>
+<li>Update global diameter with leftHeight + rightHeight.</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(h) stack.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>public class DiameterTree {
+
+    static class TreeNode {
+        int val;
+        TreeNode left, right;
+        TreeNode(int v) { val = v; }
+    }
+
+    private static int best;
+
+    public static int diameter(TreeNode root) {
+        best = 0;
+        height(root);
+        return best;
+    }
+
+    private static int height(TreeNode n) {
+        if (n == null) return 0;
+
+        int lh = height(n.left);
+        int rh = height(n.right);
+
+        best = Math.max(best, lh + rh);
+        return 1 + Math.max(lh, rh);
+    }
+}</code></pre>
+</section>
+
+
+<div class="pager">
+  <a href="page-10.html">← Previous</a>
+  <a href="page-12.html">Next →</a>
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MASTER Interview Guide – Problems 76–80</title>
+<style>
+:root { --bg:#0b0f14; --card:#111826; --text:#e6edf3; --muted:#9fb0c0; --accent:#7aa2f7; --code:#0a0e14; --border:#263244; }
+@media (prefers-color-scheme: light) {
+  :root { --bg:#ffffff; --card:#f7f9fc; --text:#0b1220; --muted:#516070; --accent:#2f6feb; --code:#0b1220; --border:#d6deea; }
+}
+html,body { margin:0; padding:0; background:var(--bg); color:var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+.container { max-width: 980px; margin: 0 auto; padding: 24px 16px 60px; }
+.topbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom: 16px; }
+.brand { font-weight: 800; letter-spacing: .2px; }
+.badge { color: var(--muted); font-size: 13px; }
+.nav a { color: var(--accent); text-decoration: none; font-weight: 600; }
+.nav a:hover { text-decoration: underline; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px 16px; margin: 14px 0; box-shadow: 0 6px 18px rgba(0,0,0,.12); }
+.h1 { font-size: 22px; font-weight: 800; margin: 0 0 8px; }
+.h2 { font-size: 16px; font-weight: 800; margin: 0 0 8px; }
+.meta { color: var(--muted); font-size: 13px; margin-bottom: 10px; }
+ul { margin: 8px 0 12px 20px; }
+pre { background: var(--code); border: 1px solid var(--border); border-radius: 12px; padding: 12px; overflow:auto; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12.5px; }
+.pager { display:flex; gap:12px; justify-content:space-between; margin-top: 18px; }
+.pager a { display:inline-block; padding: 10px 12px; border:1px solid var(--border); border-radius: 12px; color: var(--accent); text-decoration:none; font-weight:700; background: transparent; }
+.pager a:hover { filter: brightness(1.08); }
+.grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 14px; }
+.tile { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+.tile a { color: var(--accent); text-decoration:none; font-weight:800; }
+.small { color: var(--muted); font-size: 13px; margin-top: 6px; }
+hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+pre {
+    background: #f5f5f5;
+    color: #000;
+    padding: 14px;
+    border-radius: 6px;
+    border-left: 4px solid #3f51b5;
+    overflow-x: auto;
+}
+
+code {
+    color: #000;
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+</style>
+
+</head>
+<body>
+<div class="container">
+
+<div class="topbar">
+  <div>
+    <div class="brand">Problems 76–80</div>
+    <div class="badge"><a class="nav" href="index.html" style="color:var(--accent); text-decoration:none;">Index</a> • Jump: <a href="#p76">76</a> • <a href="#p77">77</a> • <a href="#p78">78</a> • <a href="#p79">79</a> • <a href="#p80">80</a></div>
+  </div>
+  <div class="nav">
+    <a href="page-15.html">← Previous</a> &nbsp; <a href="index.html">Back to Index</a>
+  </div>
+</div>
+
+
+<section class="card" id="p76">
+  <div class="h2">76. Design Parking Lot (Simplified Code Skeleton)</div>
+  <div class="meta">Design-Oriented Coding</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Model vehicles (size), parking spots (size), and levels.</li>
+<li>Allocation: find first compatible free spot.</li>
+<li>Release: mark spot free.</li></ul>
+  <div><strong>Complexity</strong>: Simple scan O(spots).</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>import java.util.*;
+
+public class ParkingLot {
+
+    enum Size { MOTORCYCLE, COMPACT, LARGE }
+
+    static class Vehicle {
+        final Size size;
+        Vehicle(Size s) { size = s; }
+    }
+
+    static class Spot {
+        final Size size;
+        boolean free = true;
+        Vehicle v;
+
+        Spot(Size s) { size = s; }
+
+        boolean canFit(Vehicle x) {
+            return free &amp;&amp; size.ordinal() &gt;= x.size.ordinal();
+        }
+
+        void park(Vehicle x) {
+            free = false;
+            v = x;
+        }
+
+        void leave() {
+            free = true;
+            v = null;
+        }
+    }
+
+    static class Level {
+        final List&lt;Spot&gt; spots;
+
+        Level(List&lt;Spot&gt; s) { spots = s; }
+
+        Spot park(Vehicle v) {
+            for (Spot sp : spots) {
+                if (sp.canFit(v)) {
+                    sp.park(v);
+                    return sp;
+                }
+            }
+            return null;
+        }
+    }
+
+    private final List&lt;Level&gt; levels;
+
+    public ParkingLot(List&lt;Level&gt; levels) {
+        this.levels = levels;
+    }
+
+    public Spot park(Vehicle v) {
+        for (Level l : levels) {
+            Spot sp = l.park(v);
+            if (sp != null) return sp;
+        }
+        return null;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p77">
+  <div class="h2">77. Design URL Shortener (Base62 Encoding)</div>
+  <div class="meta">Design-Oriented Coding</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Use an auto-increment id.</li>
+<li>Encode id in base62 as short code.</li>
+<li>Store mapping code -&gt; longUrl.</li></ul>
+  <div><strong>Complexity</strong>: O(1) for encode/decode with HashMap.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>import java.util.*;
+
+public class UrlShortener {
+
+    private static final String ALPH =
+            &quot;0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;;
+
+    private long id = 1;
+    private final Map&lt;String, String&gt; codeToUrl = new HashMap&lt;&gt;();
+
+    public synchronized String shorten(String longUrl) {
+        String code = encodeBase62(id++);
+        codeToUrl.put(code, longUrl);
+        return code;
+    }
+
+    public String expand(String code) {
+        return codeToUrl.get(code);
+    }
+
+    private String encodeBase62(long x) {
+        StringBuilder sb = new StringBuilder();
+
+        while (x &gt; 0) {
+            int r = (int) (x % 62);
+            sb.append(ALPH.charAt(r));
+            x /= 62;
+        }
+        return sb.reverse().toString();
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p78">
+  <div class="h2">78. Design Logger Rate Limiter (Allow N Logs per Key per Window)</div>
+  <div class="meta">Design-Oriented Coding</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Map key -&gt; deque of timestamps.</li>
+<li>On log request: evict old timestamps (&lt; now-window).</li>
+<li>Allow if deque size &lt; N, then append now.</li></ul>
+  <div><strong>Complexity</strong>: O(1) amortized per request.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>import java.util.*;
+
+public class LoggerRateLimiter {
+
+    private final long windowMs;
+    private final int limit;
+    private final Map&lt;String, Deque&lt;Long&gt;&gt; map = new HashMap&lt;&gt;();
+
+    public LoggerRateLimiter(int limit, long windowMs) {
+        this.limit = limit;
+        this.windowMs = windowMs;
+    }
+
+    public synchronized boolean shouldLog(String key, long nowMs) {
+        Deque&lt;Long&gt; dq = map.computeIfAbsent(key, k -&gt; new ArrayDeque&lt;&gt;());
+
+        while (!dq.isEmpty() &amp;&amp; dq.peekFirst() &lt;= nowMs - windowMs) {
+            dq.removeFirst();
+        }
+
+        if (dq.size() &gt;= limit) return false;
+
+        dq.addLast(nowMs);
+        return true;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p79">
+  <div class="h2">79. Design In-Memory Cache with TTL</div>
+  <div class="meta">Design-Oriented Coding</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Store key -&gt; (value, expireAt).</li>
+<li>On get: if expired, remove and return null.</li>
+<li>Optional: periodic cleanup thread.</li></ul>
+  <div><strong>Complexity</strong>: O(1) average for get/put.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>import java.util.*;
+
+public class TTLCache&lt;K, V&gt; {
+
+    private static class Entry&lt;V&gt; {
+        V value;
+        long expireAt;
+
+        Entry(V v, long e) {
+            value = v;
+            expireAt = e;
+        }
+    }
+
+    private final Map&lt;K, Entry&lt;V&gt;&gt; map = new HashMap&lt;&gt;();
+
+    public synchronized void put(K key, V value, long ttlMs) {
+        map.put(key, new Entry&lt;&gt;(value, System.currentTimeMillis() + ttlMs));
+    }
+
+    public synchronized V get(K key) {
+        Entry&lt;V&gt; e = map.get(key);
+        if (e == null) return null;
+
+        if (System.currentTimeMillis() &gt; e.expireAt) {
+            map.remove(key);
+            return null;
+        }
+        return e.value;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p80">
+  <div class="h2">80. Design an In-Memory Message Queue (Basic)</div>
+  <div class="meta">Design-Oriented Coding</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Use a BlockingQueue for thread-safe enqueue/dequeue.</li>
+<li>Support publish (put) and consume (take).</li></ul>
+  <div><strong>Complexity</strong>: O(1) per op.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>import java.util.concurrent.*;
+
+public class MessageQueue&lt;T&gt; {
+
+    private final BlockingQueue&lt;T&gt; q;
+
+    public MessageQueue(int capacity) {
+        this.q = new ArrayBlockingQueue&lt;&gt;(capacity);
+    }
+
+    public void publish(T msg) throws InterruptedException {
+        q.put(msg);
+    }
+
+    public T consume() throws InterruptedException {
+        return q.take();
+    }
+}</code></pre>
+</section>
+
+
+<div class="pager">
+  <a href="page-15.html">← Previous</a>
+  <a href="index.html">Back to Index</a>
+</div>
+
+</div>
+</body>
+</html>

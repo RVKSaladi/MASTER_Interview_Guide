@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MASTER Interview Guide – Problems 46–50</title>
+<style>
+:root { --bg:#0b0f14; --card:#111826; --text:#e6edf3; --muted:#9fb0c0; --accent:#7aa2f7; --code:#0a0e14; --border:#263244; }
+@media (prefers-color-scheme: light) {
+  :root { --bg:#ffffff; --card:#f7f9fc; --text:#0b1220; --muted:#516070; --accent:#2f6feb; --code:#0b1220; --border:#d6deea; }
+}
+html,body { margin:0; padding:0; background:var(--bg); color:var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+.container { max-width: 980px; margin: 0 auto; padding: 24px 16px 60px; }
+.topbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom: 16px; }
+.brand { font-weight: 800; letter-spacing: .2px; }
+.badge { color: var(--muted); font-size: 13px; }
+.nav a { color: var(--accent); text-decoration: none; font-weight: 600; }
+.nav a:hover { text-decoration: underline; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px 16px; margin: 14px 0; box-shadow: 0 6px 18px rgba(0,0,0,.12); }
+.h1 { font-size: 22px; font-weight: 800; margin: 0 0 8px; }
+.h2 { font-size: 16px; font-weight: 800; margin: 0 0 8px; }
+.meta { color: var(--muted); font-size: 13px; margin-bottom: 10px; }
+ul { margin: 8px 0 12px 20px; }
+pre { background: var(--code); border: 1px solid var(--border); border-radius: 12px; padding: 12px; overflow:auto; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12.5px; }
+.pager { display:flex; gap:12px; justify-content:space-between; margin-top: 18px; }
+.pager a { display:inline-block; padding: 10px 12px; border:1px solid var(--border); border-radius: 12px; color: var(--accent); text-decoration:none; font-weight:700; background: transparent; }
+.pager a:hover { filter: brightness(1.08); }
+.grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 14px; }
+.tile { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+.tile a { color: var(--accent); text-decoration:none; font-weight:800; }
+.small { color: var(--muted); font-size: 13px; margin-top: 6px; }
+hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+pre {
+    background: #f5f5f5;
+    color: #000;
+    padding: 14px;
+    border-radius: 6px;
+    border-left: 4px solid #3f51b5;
+    overflow-x: auto;
+}
+
+code {
+    color: #000;
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+</style>
+
+</head>
+<body>
+<div class="container">
+
+<div class="topbar">
+  <div>
+    <div class="brand">Problems 46–50</div>
+    <div class="badge"><a class="nav" href="index.html" style="color:var(--accent); text-decoration:none;">Index</a> • Jump: <a href="#p46">46</a> • <a href="#p47">47</a> • <a href="#p48">48</a> • <a href="#p49">49</a> • <a href="#p50">50</a></div>
+  </div>
+  <div class="nav">
+    <a href="page-09.html">← Previous</a> &nbsp; <a href="page-11.html">Next →</a>
+  </div>
+</div>
+
+
+<section class="card" id="p46">
+  <div class="h2">46. Evaluate Postfix Expression (RPN)</div>
+  <div class="meta">Stack / Queue</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Use stack of ints.</li>
+<li>When operator seen, pop two operands, apply, push result.</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(n) space.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>import java.util.*;
+
+public class EvalRPN {
+
+    public static int evalRPN(String[] tokens) {
+        Deque&lt;Integer&gt; st = new ArrayDeque&lt;&gt;();
+
+        for (String t : tokens) {
+            if (t.equals(&quot;+&quot;) || t.equals(&quot;-&quot;) || t.equals(&quot;*&quot;) || t.equals(&quot;/&quot;)) {
+                int b = st.pop(), a = st.pop();
+                int r;
+
+                if (t.equals(&quot;+&quot;)) r = a + b;
+                else if (t.equals(&quot;-&quot;)) r = a - b;
+                else if (t.equals(&quot;*&quot;)) r = a * b;
+                else r = a / b; // trunc toward 0
+
+                st.push(r);
+            } else {
+                st.push(Integer.parseInt(t));
+            }
+        }
+        return st.pop();
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p47">
+  <div class="h2">47. Stock Span Problem</div>
+  <div class="meta">Stack / Queue</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Monotonic decreasing stack of indices (prices).</li>
+<li>Pop while current price &gt;= stackTop price.</li>
+<li>Span = i - newTopIndex (or i+1 if empty).</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(n) space.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>import java.util.*;
+
+public class StockSpan {
+
+    public static int[] span(int[] prices) {
+        int n = prices.length;
+        int[] res = new int[n];
+        Deque&lt;Integer&gt; st = new ArrayDeque&lt;&gt;();
+
+        for (int i = 0; i &lt; n; i++) {
+            while (!st.isEmpty() &amp;&amp; prices[i] &gt;= prices[st.peek()]) st.pop();
+            res[i] = st.isEmpty() ? (i + 1) : (i - st.peek());
+            st.push(i);
+        }
+        return res;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p48">
+  <div class="h2">48. Daily Temperatures</div>
+  <div class="meta">Stack / Queue</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Monotonic decreasing stack of indices (temps).</li>
+<li>When warmer day arrives, resolve previous indices.</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(n) space.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>import java.util.*;
+
+public class DailyTemperatures {
+
+    public static int[] dailyTemperatures(int[] t) {
+        int n = t.length;
+        int[] res = new int[n];
+        Deque&lt;Integer&gt; st = new ArrayDeque&lt;&gt;();
+
+        for (int i = 0; i &lt; n; i++) {
+            while (!st.isEmpty() &amp;&amp; t[i] &gt; t[st.peek()]) {
+                int j = st.pop();
+                res[j] = i - j;
+            }
+            st.push(i);
+        }
+        return res;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p49">
+  <div class="h2">49. Sliding Window Maximum</div>
+  <div class="meta">Stack / Queue</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Use deque of indices with values in decreasing order.</li>
+<li>Pop back while current &gt;= back value.</li>
+<li>Front is max; remove front if it leaves window.</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(n) space.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>import java.util.*;
+
+public class SlidingWindowMax {
+
+    public static int[] maxSlidingWindow(int[] nums, int k) {
+        int n = nums.length;
+        if (k &lt;= 0 || n == 0) return new int[0];
+
+        int[] res = new int[n - k + 1];
+        Deque&lt;Integer&gt; dq = new ArrayDeque&lt;&gt;();
+
+        for (int i = 0; i &lt; n; i++) {
+            while (!dq.isEmpty() &amp;&amp; dq.peekFirst() &lt;= i - k) dq.removeFirst();
+            while (!dq.isEmpty() &amp;&amp; nums[i] &gt;= nums[dq.peekLast()]) dq.removeLast();
+            dq.addLast(i);
+
+            if (i &gt;= k - 1) res[i - k + 1] = nums[dq.peekFirst()];
+        }
+        return res;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p50">
+  <div class="h2">50. Simplify Unix File Path</div>
+  <div class="meta">Stack / Queue</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Split by &#x27;/&#x27;.</li>
+<li>Use stack: ignore &#x27;&#x27; and &#x27;.&#x27;, pop for &#x27;..&#x27;, push normal dir names.</li>
+<li>Join with &#x27;/&#x27;.</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(n) space.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>import java.util.*;
+
+public class SimplifyPath {
+
+    public static String simplify(String path) {
+        Deque&lt;String&gt; st = new ArrayDeque&lt;&gt;();
+
+        for (String part : path.split(&quot;/&quot;)) {
+            if (part.isEmpty() || part.equals(&quot;.&quot;)) continue;
+            if (part.equals(&quot;..&quot;)) {
+                if (!st.isEmpty()) st.pop();
+            } else {
+                st.push(part);
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+        Iterator&lt;String&gt; it = st.descendingIterator();
+        while (it.hasNext()) sb.append(&#x27;/&#x27;).append(it.next());
+
+        return sb.length() == 0 ? &quot;/&quot; : sb.toString();
+    }
+}</code></pre>
+</section>
+
+
+<div class="pager">
+  <a href="page-09.html">← Previous</a>
+  <a href="page-11.html">Next →</a>
+</div>
+
+</div>
+</body>
+</html>

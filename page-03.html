@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MASTER Interview Guide – Problems 11–15</title>
+<style>
+:root { --bg:#0b0f14; --card:#111826; --text:#e6edf3; --muted:#9fb0c0; --accent:#7aa2f7; --code:#0a0e14; --border:#263244; }
+@media (prefers-color-scheme: light) {
+  :root { --bg:#ffffff; --card:#f7f9fc; --text:#0b1220; --muted:#516070; --accent:#2f6feb; --code:#0b1220; --border:#d6deea; }
+}
+html,body { margin:0; padding:0; background:var(--bg); color:var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+.container { max-width: 980px; margin: 0 auto; padding: 24px 16px 60px; }
+.topbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom: 16px; }
+.brand { font-weight: 800; letter-spacing: .2px; }
+.badge { color: var(--muted); font-size: 13px; }
+.nav a { color: var(--accent); text-decoration: none; font-weight: 600; }
+.nav a:hover { text-decoration: underline; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px 16px; margin: 14px 0; box-shadow: 0 6px 18px rgba(0,0,0,.12); }
+.h1 { font-size: 22px; font-weight: 800; margin: 0 0 8px; }
+.h2 { font-size: 16px; font-weight: 800; margin: 0 0 8px; }
+.meta { color: var(--muted); font-size: 13px; margin-bottom: 10px; }
+ul { margin: 8px 0 12px 20px; }
+pre { background: var(--code); border: 1px solid var(--border); border-radius: 12px; padding: 12px; overflow:auto; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12.5px; }
+.pager { display:flex; gap:12px; justify-content:space-between; margin-top: 18px; }
+.pager a { display:inline-block; padding: 10px 12px; border:1px solid var(--border); border-radius: 12px; color: var(--accent); text-decoration:none; font-weight:700; background: transparent; }
+.pager a:hover { filter: brightness(1.08); }
+.grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 14px; }
+.tile { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+.tile a { color: var(--accent); text-decoration:none; font-weight:800; }
+.small { color: var(--muted); font-size: 13px; margin-top: 6px; }
+hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+pre {
+    background: #f5f5f5;
+    color: #000;
+    padding: 14px;
+    border-radius: 6px;
+    border-left: 4px solid #3f51b5;
+    overflow-x: auto;
+}
+
+code {
+    color: #000;
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+</style>
+
+</head>
+<body>
+<div class="container">
+
+<div class="topbar">
+  <div>
+    <div class="brand">Problems 11–15</div>
+    <div class="badge"><a class="nav" href="index.html" style="color:var(--accent); text-decoration:none;">Index</a> • Jump: <a href="#p11">11</a> • <a href="#p12">12</a> • <a href="#p13">13</a> • <a href="#p14">14</a> • <a href="#p15">15</a></div>
+  </div>
+  <div class="nav">
+    <a href="page-02.html">← Previous</a> &nbsp; <a href="page-04.html">Next →</a>
+  </div>
+</div>
+
+
+<section class="card" id="p11">
+  <div class="h2">11. Find the Second Most Frequent Character</div>
+  <div class="meta">Strings + HashMap / Sliding Window</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Count frequencies.</li>
+<li>Track best and second-best from frequency array.</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(1) space.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>public class SecondMostFrequentChar {
+
+    public static char secondMostFrequent(String s) {
+        int[] cnt = new int[256];
+        for (char c : s.toCharArray()) cnt[c]++;
+
+        int first = -1, second = -1;
+
+        for (int i = 0; i &lt; 256; i++) {
+            if (cnt[i] == 0) continue;
+
+            if (first == -1 || cnt[i] &gt; cnt[first]) {
+                second = first;
+                first = i;
+            } else if (i != first &amp;&amp; (second == -1 || cnt[i] &gt; cnt[second])) {
+                second = i;
+            }
+        }
+        return second == -1 ? &#x27;_&#x27; : (char) second;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p12">
+  <div class="h2">12. Check if String Characters Can Form a Palindrome</div>
+  <div class="meta">Strings + HashMap / Sliding Window</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Count frequencies.</li>
+<li>At most one character may have an odd count.</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(1) space.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>public class PalindromePermutation {
+
+    public static boolean canFormPalindrome(String s) {
+        int[] cnt = new int[256];
+        for (char c : s.toCharArray()) cnt[c]++;
+
+        int odd = 0;
+        for (int x : cnt) {
+            if ((x &amp; 1) == 1) odd++;
+        }
+        return odd &lt;= 1;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p13">
+  <div class="h2">13. Longest Common Prefix</div>
+  <div class="meta">Strings + HashMap / Sliding Window</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Take the first string as prefix.</li>
+<li>Shrink prefix until it matches start of each string.</li></ul>
+  <div><strong>Complexity</strong>: O(total chars) time.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>public class LongestCommonPrefix {
+
+    public static String lcp(String[] strs) {
+        if (strs == null || strs.length == 0) return &quot;&quot;;
+
+        String pref = strs[0];
+
+        for (int i = 1; i &lt; strs.length; i++) {
+            while (!strs[i].startsWith(pref)) {
+                if (pref.isEmpty()) return &quot;&quot;;
+                pref = pref.substring(0, pref.length() - 1);
+            }
+        }
+        return pref;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p14">
+  <div class="h2">14. String Compression (aabcc -&gt; a2b1c2)</div>
+  <div class="meta">Strings + HashMap / Sliding Window</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Scan runs of same character.</li>
+<li>Append char + run length to StringBuilder.</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(n) space.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>public class StringCompression {
+
+    public static String compress(String s) {
+        if (s == null || s.isEmpty()) return s;
+
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+
+        while (i &lt; s.length()) {
+            char c = s.charAt(i);
+            int j = i;
+
+            while (j &lt; s.length() &amp;&amp; s.charAt(j) == c) j++;
+            sb.append(c).append(j - i);
+            i = j;
+        }
+        return sb.toString();
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p15">
+  <div class="h2">15. Reverse Words in a String</div>
+  <div class="meta">Strings + HashMap / Sliding Window</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Trim and split by whitespace.</li>
+<li>Reverse array of words; join with single spaces.</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(n) space.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>public class ReverseWords {
+
+    public static String reverseWords(String s) {
+        String[] words = s.trim().split(&quot;\\s+&quot;);
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = words.length - 1; i &gt;= 0; i--) {
+            sb.append(words[i]);
+            if (i != 0) sb.append(&#x27; &#x27;);
+        }
+        return sb.toString();
+    }
+}</code></pre>
+</section>
+
+
+<div class="pager">
+  <a href="page-02.html">← Previous</a>
+  <a href="page-04.html">Next →</a>
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MASTER Interview Guide – Problems 36–40</title>
+<style>
+:root { --bg:#0b0f14; --card:#111826; --text:#e6edf3; --muted:#9fb0c0; --accent:#7aa2f7; --code:#0a0e14; --border:#263244; }
+@media (prefers-color-scheme: light) {
+  :root { --bg:#ffffff; --card:#f7f9fc; --text:#0b1220; --muted:#516070; --accent:#2f6feb; --code:#0b1220; --border:#d6deea; }
+}
+html,body { margin:0; padding:0; background:var(--bg); color:var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+.container { max-width: 980px; margin: 0 auto; padding: 24px 16px 60px; }
+.topbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom: 16px; }
+.brand { font-weight: 800; letter-spacing: .2px; }
+.badge { color: var(--muted); font-size: 13px; }
+.nav a { color: var(--accent); text-decoration: none; font-weight: 600; }
+.nav a:hover { text-decoration: underline; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px 16px; margin: 14px 0; box-shadow: 0 6px 18px rgba(0,0,0,.12); }
+.h1 { font-size: 22px; font-weight: 800; margin: 0 0 8px; }
+.h2 { font-size: 16px; font-weight: 800; margin: 0 0 8px; }
+.meta { color: var(--muted); font-size: 13px; margin-bottom: 10px; }
+ul { margin: 8px 0 12px 20px; }
+pre { background: var(--code); border: 1px solid var(--border); border-radius: 12px; padding: 12px; overflow:auto; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12.5px; }
+.pager { display:flex; gap:12px; justify-content:space-between; margin-top: 18px; }
+.pager a { display:inline-block; padding: 10px 12px; border:1px solid var(--border); border-radius: 12px; color: var(--accent); text-decoration:none; font-weight:700; background: transparent; }
+.pager a:hover { filter: brightness(1.08); }
+.grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 14px; }
+.tile { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+.tile a { color: var(--accent); text-decoration:none; font-weight:800; }
+.small { color: var(--muted); font-size: 13px; margin-top: 6px; }
+hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+pre {
+    background: #f5f5f5;
+    color: #000;
+    padding: 14px;
+    border-radius: 6px;
+    border-left: 4px solid #3f51b5;
+    overflow-x: auto;
+}
+
+code {
+    color: #000;
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+</style>
+
+</head>
+<body>
+<div class="container">
+
+<div class="topbar">
+  <div>
+    <div class="brand">Problems 36–40</div>
+    <div class="badge"><a class="nav" href="index.html" style="color:var(--accent); text-decoration:none;">Index</a> • Jump: <a href="#p36">36</a> • <a href="#p37">37</a> • <a href="#p38">38</a> • <a href="#p39">39</a> • <a href="#p40">40</a></div>
+  </div>
+  <div class="nav">
+    <a href="page-07.html">← Previous</a> &nbsp; <a href="page-09.html">Next →</a>
+  </div>
+</div>
+
+
+<section class="card" id="p36">
+  <div class="h2">36. Find Middle of Linked List</div>
+  <div class="meta">Linked List</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Use slow/fast pointers.</li>
+<li>When fast reaches end, slow is middle.</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(1) space.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>public class MiddleOfList {
+
+    static class ListNode {
+        int val;
+        ListNode next;
+        ListNode(int v) { val = v; }
+    }
+
+    public static ListNode middle(ListNode head) {
+        ListNode slow = head, fast = head;
+
+        while (fast != null &amp;&amp; fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return slow;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p37">
+  <div class="h2">37. Remove Nth Node from End</div>
+  <div class="meta">Linked List</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Use dummy head.</li>
+<li>Advance fast n steps, then move slow and fast together.</li>
+<li>Delete slow.next.</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(1) space.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>public class RemoveNthFromEnd {
+
+    static class ListNode {
+        int val;
+        ListNode next;
+        ListNode(int v) { val = v; }
+    }
+
+    public static ListNode removeNth(ListNode head, int n) {
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+
+        ListNode fast = dummy, slow = dummy;
+
+        for (int i = 0; i &lt; n; i++) fast = fast.next;
+
+        while (fast.next != null) {
+            fast = fast.next;
+            slow = slow.next;
+        }
+
+        slow.next = slow.next.next;
+        return dummy.next;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p38">
+  <div class="h2">38. Check if Linked List Is Palindrome</div>
+  <div class="meta">Linked List</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Find mid (slow/fast).</li>
+<li>Reverse second half.</li>
+<li>Compare halves; optionally restore list.</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(1) space.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>public class PalindromeList {
+
+    static class ListNode {
+        int val;
+        ListNode next;
+        ListNode(int v) { val = v; }
+    }
+
+    public static boolean isPalindrome(ListNode head) {
+        if (head == null || head.next == null) return true;
+
+        ListNode slow = head, fast = head;
+
+        while (fast.next != null &amp;&amp; fast.next.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        ListNode second = reverse(slow.next);
+        ListNode p1 = head, p2 = second;
+
+        boolean ok = true;
+        while (ok &amp;&amp; p2 != null) {
+            if (p1.val != p2.val) ok = false;
+            p1 = p1.next;
+            p2 = p2.next;
+        }
+
+        slow.next = reverse(second); // restore
+        return ok;
+    }
+
+    private static ListNode reverse(ListNode h) {
+        ListNode prev = null, cur = h;
+
+        while (cur != null) {
+            ListNode nxt = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = nxt;
+        }
+        return prev;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p39">
+  <div class="h2">39. Intersection of Two Linked Lists</div>
+  <div class="meta">Linked List</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>Two pointers that switch lists at end.</li>
+<li>They meet at intersection or at null.</li></ul>
+  <div><strong>Complexity</strong>: O(n+m) time, O(1) space.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>public class IntersectionOfLists {
+
+    static class ListNode {
+        int val;
+        ListNode next;
+        ListNode(int v) { val = v; }
+    }
+
+    public static ListNode getIntersectionNode(ListNode a, ListNode b) {
+        ListNode p = a, q = b;
+
+        while (p != q) {
+            p = (p == null) ? b : p.next;
+            q = (q == null) ? a : q.next;
+        }
+        return p;
+    }
+}</code></pre>
+</section>
+
+<section class="card" id="p40">
+  <div class="h2">40. Flatten a Multilevel Linked List (next/child) Using Stack</div>
+  <div class="meta">Linked List</div>
+  <div><strong>Approach</strong></div>
+  <ul><li>DFS using stack to process next pointers.</li>
+<li>When a node has child, push current.next then go to child.</li>
+<li>Reconnect pointers and null out child.</li></ul>
+  <div><strong>Complexity</strong>: O(n) time, O(n) stack worst-case.</div>
+  <div style="height:10px"></div>
+  <div><strong>Java</strong></div>
+  <pre><code>import java.util.*;
+
+public class FlattenMultilevelList {
+
+    static class Node {
+        int val;
+        Node next, child;
+        Node(int v) { val = v; }
+    }
+
+    public static Node flatten(Node head) {
+        if (head == null) return null;
+
+        Deque&lt;Node&gt; st = new ArrayDeque&lt;&gt;();
+        Node cur = head;
+
+        while (cur != null) {
+            if (cur.child != null) {
+                if (cur.next != null) st.push(cur.next);
+                cur.next = cur.child;
+                cur.child = null;
+            } else if (cur.next == null &amp;&amp; !st.isEmpty()) {
+                cur.next = st.pop();
+            }
+            cur = cur.next;
+        }
+        return head;
+    }
+}</code></pre>
+</section>
+
+
+<div class="pager">
+  <a href="page-07.html">← Previous</a>
+  <a href="page-09.html">Next →</a>
+</div>
+
+</div>
+</body>
+</html>
